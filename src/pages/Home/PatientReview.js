@@ -12,10 +12,10 @@ const PatientReview = () => {
         { id:3, text: 'It is a long established fact that by the readable content of a lot layout. The point of using Lorem a more-or-less normal distribu to using Content here, content', img: image3, name: 'Natalia Gorchev', address: 'Miami' },
     ]
     return (
-        <section className='lg:px-12 mx-4 px-4 my-20'>
+        <section className='lg:px-12 mx-4 px-4 mt-20 mb-32'>
             <div className='flex justify-between mt-6 mb-10'>
                 <div>
-                    <h1 className='text-primary my-2'>Testimonial</h1>
+                    <h1 className='text-secondary font-semibold my-2'>Testimonial</h1>
                     <h1 className="text-3xl text-accent">What Our Patients Says</h1>
                 </div>
                 <div className='flex justify-end'>
