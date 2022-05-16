@@ -1,12 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from "react-hook-form";
+import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import LoadingSpinner from '../Shared/LoadingSpinner';
+import auth from '../../firebase.init';
+import toast from 'react-hot-toast';
 
 const Login = () => {
+    const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
+    const [
+        signInWithEmailAndPassword,
+        user,
+        loading,
+        error,
+      ] = useSignInWithEmailAndPassword(auth);
+
 
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const onSubmit = data => {
-        console.log(data)
+    const onSubmit = (data, event) => {
+        // console.log(data);
+
+        event.target.reset();
     };
+    useEffect(() => {
+        if (gError || error) {
+            let error = gError;
+            // console.log(error);
+            toast.error(error.message, { id: 'login-error' })
+        }
+    }, [gError,error]);
+
+    if (gLoading || loading) {
+        return <LoadingSpinner></LoadingSpinner>
+    }
+    if (gUser || user) {
+        console.log(gUser);
+    }
+
     return (
         <div className='shadow-xl rounded-lg lg:w-1/4 md:w-5/12 w-4/6 mx-auto p-6 mt-10'>
             <div>
@@ -38,7 +67,7 @@ const Login = () => {
                 </form>
             </div>
             <div className="divider">OR</div>
-            <button className="btn text-accent hover:text-white input input-bordered w-full max-w-lg my-2">Continue with Google</button>
+            <button onClick={() => signInWithGoogle()} className="btn text-accent hover:text-white input input-bordered w-full max-w-lg my-2">Continue with Google</button>
         </div>
     );
 };
