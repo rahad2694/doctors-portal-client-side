@@ -6,7 +6,7 @@ import auth from '../../firebase.init';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
-const Login = () => {
+const SignUp = () => {
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const [
         signInWithEmailAndPassword,
@@ -30,7 +30,7 @@ const Login = () => {
         if (gUser || user) {
             toast.success('Successfully Logged in', { id: 'login-success' })
             let currentUser = gUser || user;
-            // console.log(currentUser.user);
+            console.log(currentUser.user);
         }
     }, [gError, error, gUser , user]);
 
@@ -42,7 +42,7 @@ const Login = () => {
     return (
         <div className='shadow-xl rounded-lg lg:w-1/4 md:w-5/12 w-4/6 mx-auto p-6 mt-10'>
             <div>
-                <h3 className="text-lg font-bold text-center mb-3">Please Log in</h3>
+                <h3 className="text-lg font-bold text-center mb-3">Please Sign Up</h3>
                 <form onSubmit={handleSubmit(onSubmit)} className='py-4 flex flex-col items-center'>
                     <div className='w-full max-w-lg mb-2'>
                         <label className="label">
@@ -66,14 +66,14 @@ const Login = () => {
                         <p className='text-red-500 text-xs ml-1 mt-1'>{errors.password?.type === 'pattern' && "Minimum eight characters, at least one letter and one number"}</p>
                     </div>
 
-                    <input type="submit" value="log in" className="btn btn-active input input-bordered w-full max-w-lg" />
+                    <input type="submit" value="Sign Up" className="btn btn-active input input-bordered w-full max-w-lg" />
                 </form>
             </div>
-            <h5 className='text-center text-sm my-2'>New to Doctors Portal? <Link className='text-secondary hover:text-red-500' to='/signup'>Create new account</Link></h5>
+            <h5 className='text-center text-sm my-2'>Already registered? <Link className='text-secondary hover:text-red-500' to='/login'>Please login</Link></h5>
             <div className="divider">OR</div>
             <button onClick={() => signInWithGoogle()} className="btn text-accent hover:text-white input input-bordered w-full max-w-lg my-2">Continue with Google</button>
         </div>
     );
 };
 
-export default Login; <h1>This is login page</h1>
+export default SignUp;
