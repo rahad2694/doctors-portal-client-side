@@ -21,7 +21,7 @@ const AvailableAppointment = ({date}) => {
                     services.map(service=><Service key={service._id} service={service} setTreatment={setTreatment}></Service>)
                 }
             </div>
-            {treatment && <ServiceModal treatment={treatment} key={treatment._id}></ServiceModal>}
+            {treatment && <ServiceModal treatment={treatment} setTreatment={setTreatment} date={date} key={treatment._id}></ServiceModal>}
         </div>
     );
 };
