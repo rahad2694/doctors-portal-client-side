@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useForm } from "react-hook-form";
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword, useSendEmailVerification, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
 import LoadingSpinner from '../Shared/LoadingSpinner';
 import auth from '../../firebase.init';
 import toast from 'react-hot-toast';
@@ -9,32 +9,37 @@ import { Link } from 'react-router-dom';
 const SignUp = () => {
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const [
-        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
         user,
         loading,
         error,
-    ] = useSignInWithEmailAndPassword(auth);
+    ] = useCreateUserWithEmailAndPassword(auth);
+    const [updateProfile, updating, updateError] = useUpdateProfile(auth);
+    const [sendEmailVerification, sending, verifyError] = useSendEmailVerification(auth);
 
 
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const onSubmit = (data, event) => {
-        signInWithEmailAndPassword(data.email, data.password);
+    const onSubmit = async(data, event) => {
+        await createUserWithEmailAndPassword(data.email, data.password);
+        await updateProfile({displayName:data.name});
+        await sendEmailVerification();
+        toast.success('Verification Email Sent!', { id: 'verify-sent' })
         event.target.reset();
     };
     useEffect(() => {
-        if (gError || error) {
-            let errorMsg = gError || error;
+        if (gError || error || updateError || verifyError) {
+            let errorMsg = gError || error || updateError ||verifyError;
             // console.log(error);
             toast.error(errorMsg?.message, { id: 'login-error' })
         }
         if (gUser || user) {
-            toast.success('Successfully Logged in', { id: 'login-success' })
-            let currentUser = gUser || user;
-            console.log(currentUser.user);
+            toast.success('Successfully Signed Up', { id: 'login-success' })
+            // let currentUser = gUser || user;
+            // console.log(currentUser.user);
         }
-    }, [gError, error, gUser , user]);
+    }, [gError, error, gUser, user, updateError,verifyError]);
 
-    if (gLoading || loading) {
+    if (gLoading || loading || updating || sending) {
         return <LoadingSpinner></LoadingSpinner>
     }
 
@@ -44,6 +49,16 @@ const SignUp = () => {
             <div>
                 <h3 className="text-lg font-bold text-center mb-3">Please Sign Up</h3>
                 <form onSubmit={handleSubmit(onSubmit)} className='py-4 flex flex-col items-center'>
+                    <div className='w-full max-w-lg mb-2'>
+                        <label className="label">
+                            <span className="label-text font-semibold ml-1">Name</span>
+                        </label>
+                        <input {...register("name", { required: true })}
+                            type="text"
+                            placeholder="Your Name" name="name" className="input input-bordered w-full max-w-lg" />
+                        <p className='text-red-500 text-sm ml-1 mt-1'>{errors.name?.type === 'required' && "Name is required"}</p>
+                    </div>
+
                     <div className='w-full max-w-lg mb-2'>
                         <label className="label">
                             <span className="label-text font-semibold ml-1">Email</span>
