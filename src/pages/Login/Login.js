@@ -5,6 +5,7 @@ import LoadingSpinner from '../Shared/LoadingSpinner';
 import auth from '../../firebase.init';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import ForgotPassModal from './ForgotPassModal';
 
 const Login = () => {
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
@@ -64,6 +65,8 @@ const Login = () => {
                             placeholder="Password" name="password" className="input input-bordered w-full max-w-lg" />
                         <p className='text-red-500 text-sm ml-1 mt-1'>{errors.password?.type === 'required' && "Password is required"}</p>
                         <p className='text-red-500 text-xs ml-1 mt-1'>{errors.password?.type === 'pattern' && "Minimum eight characters, at least one letter and one number"}</p>
+                        <label htmlFor="forgot-modal" className='hover:text-red-500 text-xs ml-1 mt-1 cursor-pointer'>Forgot Password?</label>
+                        
                     </div>
 
                     <input type="submit" value="log in" className="btn btn-active input input-bordered w-full max-w-lg" />
@@ -72,6 +75,7 @@ const Login = () => {
             <h5 className='text-center text-sm my-2'>New to Doctors Portal? <Link className='text-secondary hover:text-red-500' to='/signup'>Create new account</Link></h5>
             <div className="divider">OR</div>
             <button onClick={() => signInWithGoogle()} className="btn text-accent hover:text-white input input-bordered w-full max-w-lg my-2">Continue with Google</button>
+            <ForgotPassModal></ForgotPassModal>
         </div>
     );
 };
