@@ -11,14 +11,11 @@ const ForgotPassModal = () => {
         e.preventDefault();
         const userEmail = e.target.email.value;
         await sendPasswordResetEmail(userEmail);
-
+        toast.success('Reset Email Sent!', { id: 'reset-sent' })
     }
     useEffect(() => {
         if (error) {
             toast.error(error.message, { id: 'reset-error' });
-        }
-        else {
-            toast.success('Reset Email Sent!', { id: 'reset-sent' })
         }
     }, [error]);
     if (sending) {
@@ -41,7 +38,7 @@ const ForgotPassModal = () => {
                     <label htmlFor="forgot-modal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                     <h3 className="text-lg font-bold">Enter Your Email</h3>
                     <form onSubmit={handleSubmit} className='py-4'>
-                        <input type="email" placeholder="Email" name="email" className="input input-bordered w-full max-w-lg mt-5 mb-8" />
+                        <input required type="email" placeholder="Email" name="email" className="input input-bordered w-full max-w-lg mt-5 mb-8" />
                         <input type="submit" value="Reset Password" className="btn btn-active input input-bordered w-full max-w-lg" />
                     </form>
                 </div>

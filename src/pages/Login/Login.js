@@ -4,7 +4,7 @@ import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-fireba
 import LoadingSpinner from '../Shared/LoadingSpinner';
 import auth from '../../firebase.init';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ForgotPassModal from './ForgotPassModal';
 
 const Login = () => {
@@ -15,7 +15,9 @@ const Login = () => {
         loading,
         error,
     ] = useSignInWithEmailAndPassword(auth);
-
+    const navigate = useNavigate();
+    const location = useLocation();
+    let from = location.state?.from?.pathname || "/";
 
     const { register, formState: { errors }, handleSubmit } = useForm();
     const onSubmit = (data, event) => {
@@ -30,10 +32,11 @@ const Login = () => {
         }
         if (gUser || user) {
             toast.success('Successfully Logged in', { id: 'login-success' })
-            let currentUser = gUser || user;
+            navigate(from, { replace: true });
+            // let currentUser = gUser || user;
             // console.log(currentUser.user);
         }
-    }, [gError, error, gUser , user]);
+    }, [gError, error, gUser, user, from, navigate]);
 
     if (gLoading || loading) {
         return <LoadingSpinner></LoadingSpinner>
@@ -66,7 +69,7 @@ const Login = () => {
                         <p className='text-red-500 text-sm ml-1 mt-1'>{errors.password?.type === 'required' && "Password is required"}</p>
                         <p className='text-red-500 text-xs ml-1 mt-1'>{errors.password?.type === 'pattern' && "Minimum eight characters, at least one letter and one number"}</p>
                         <label htmlFor="forgot-modal" className='hover:text-red-500 text-xs ml-1 mt-1 cursor-pointer'>Forgot Password?</label>
-                        
+
                     </div>
 
                     <input type="submit" value="log in" className="btn btn-active input input-bordered w-full max-w-lg" />

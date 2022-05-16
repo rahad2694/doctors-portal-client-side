@@ -4,7 +4,7 @@ import { useCreateUserWithEmailAndPassword, useSendEmailVerification, useSignInW
 import LoadingSpinner from '../Shared/LoadingSpinner';
 import auth from '../../firebase.init';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
@@ -16,7 +16,7 @@ const SignUp = () => {
     ] = useCreateUserWithEmailAndPassword(auth);
     const [updateProfile, updating, updateError] = useUpdateProfile(auth);
     const [sendEmailVerification, sending, verifyError] = useSendEmailVerification(auth);
-
+    const navigate = useNavigate();
 
     const { register, formState: { errors }, handleSubmit } = useForm();
     const onSubmit = async(data, event) => {
@@ -34,10 +34,11 @@ const SignUp = () => {
         }
         if (gUser || user) {
             toast.success('Successfully Signed Up', { id: 'login-success' })
+            navigate('/');
             // let currentUser = gUser || user;
             // console.log(currentUser.user);
         }
-    }, [gError, error, gUser, user, updateError,verifyError]);
+    }, [gError, error, gUser, user, updateError,verifyError,navigate]);
 
     if (gLoading || loading || updating || sending) {
         return <LoadingSpinner></LoadingSpinner>
